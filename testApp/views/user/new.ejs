@@ -2,6 +2,16 @@
     
     <h2 class="form-signin-heading">Create New Account</h2>
     
+    <% if (flash && flash.has('invalid')) { %>
+        <ul class="alert alert-success">
+            <% flash.get('invalid').forEach(function(message) { %>
+                <li><%= message %></li>
+            <% }) %>
+    
+            
+        </ul>
+    <% } %>
+    
     <input type="text" class="form-control" placeholder="your name" name="name" />
     <input type="text" class="form-control" placeholder="your title" name="title" />
     <input type="text" class="form-control" placeholder="your email" name="email" />

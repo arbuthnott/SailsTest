@@ -1,0 +1,23 @@
+<form action="/user/update" method="POST" class="form-signin">
+    
+    <h2 class="form-signin-heading">Edit Profile</h2>
+    
+    <% if (flash && flash.has('invalid')) { %>
+        <ul class="alert alert-success">
+            <% flash.get('invalid').forEach(function(message) { %>
+                <li><%= message %></li>
+            <% }) %>
+    
+            
+        </ul>
+    <% } %>
+    
+    <input value="<%= user.name %>" type="text" class="form-control" placeholder="your name" name="name" />
+    <input value="<%= user.title %>" type="text" class="form-control" placeholder="your title" name="title" />
+    <input value="<%= user.email %>" type="text" class="form-control" placeholder="your email" name="email" />
+    <br />
+    
+    <input type="submit" class="btn btn-lg btn-primary btn-block" value="Update Profile" />
+    <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+
+</form>
