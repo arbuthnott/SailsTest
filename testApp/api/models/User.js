@@ -23,7 +23,16 @@ module.exports = {
           type : 'string',
           email: true,
           required: true,
-          unique: true
+      },
+      
+      admin : {
+          type : 'boolean',
+          defaultsTo : false
+      },
+      
+      online : {
+          type : 'boolean',
+          defaultsTo : false
       },
       
       encryptedPassword : {
@@ -41,10 +50,20 @@ module.exports = {
       }
   },
     
+  beforeValidate : function (values, next) {
+      // awkward - have to handle admin values from routine save or updates,
+      // plus the "on" property we get from a form checkbox. :P
+      if (values.admin !== true && values.admin !== false) {
+          values.admin = (values.admin == 'on');
+      }
+      next();
+  },
+    
   beforeCreate : function (values, next) {
       if (!values.password || values.password != values.confirmation) {
           return next({err: ['Password doesn\'t match Password Confirmation']});
       }
+      // 10 rounds of hashing...
       require('bcrypt').hash(values.password, 10, function (err, encryptedPassword) {
           if (err) {
               return next(err);

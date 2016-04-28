@@ -1,0 +1,19 @@
+<tr data-id="<%= obj.id %>" data-model="user">
+    <td><img src="/images/<%= obj.online ? 'check.png' : 'minus.png' %>" /></td>
+    <td><%= obj.id %></td>
+    <td><%= obj.name %></td>
+    <td><%= obj.title %></td>
+    <td><%= obj.email %></td>
+    <td>
+        <input type="checkbox" disabled <%= obj.admin ? 'checked' : '' %> />
+    </td>
+    <td><a href="/user/show/<%= obj.id %>" class="btn btn-sm btn-primary">Show</a></td>
+    <td><a href="/user/edit/<%= obj.id %>" class="btn btn-sm btn-warning">Edit</a></td>
+    <td>
+        <form action="/user/destroy/<%= obj.id %>" method="POST">
+            <input type="hidden" name="_method" value="delete" />
+            <input type="hidden" name="_csrf" value="<%= obj.csrf %>" />
+            <input type="submit" class="btn btn-sm btn-danger" value="Delete" />
+        </form>
+    </td>
+</tr>

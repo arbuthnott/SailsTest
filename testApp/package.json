@@ -26,7 +26,8 @@
     "sails": "~0.12.3",
     "sails-disk": "~0.10.9",
     "sails-hook-flash": "^0.2.1",
-    "sails-mongo": "^0.12.0"
+    "sails-mongo": "^0.12.0",
+    "underscore": "^1.8.3"
   },
   "scripts": {
     "debug": "node debug app.js",

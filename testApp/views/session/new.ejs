@@ -1,0 +1,20 @@
+<form action="/session/create" method="POST" class="form-signin">
+    <h2 class="form-signin-heading">Please sign in...</h2>
+    
+    <% if (flash && flash.has('invalid')) { %>
+        <ul class="alert alert-success">
+            <% flash.get('invalid').forEach(function(message) { %>
+                <li><%= message %></li>
+            <% }) %>
+    
+            
+        </ul>
+    <% } %>
+    
+    <input type="text" class="form-control" placeholder="your email" name="email" />
+    <input type="password" class="form-control" placeholder="your password" name="password" />
+    <br />
+    
+    <input type="submit" class="btn btn-lg btn-primary btn-block" value="Create Account" />
+    <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+</form>

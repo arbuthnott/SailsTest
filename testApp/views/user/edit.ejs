@@ -15,9 +15,14 @@
     <input value="<%= user.name %>" type="text" class="form-control" placeholder="your name" name="name" />
     <input value="<%= user.title %>" type="text" class="form-control" placeholder="your title" name="title" />
     <input value="<%= user.email %>" type="text" class="form-control" placeholder="your email" name="email" />
+    <% if (session.user.admin) { %>
+        <input type="checkbox" name="admin" <%= user.admin ? 'checked' : '' %> />
+        <label>Admin user</label>
+    <% } %>
     <br />
     
     <input type="submit" class="btn btn-lg btn-primary btn-block" value="Update Profile" />
+    <input type="hidden" name="id" value="<%= user.id %>" />
     <input type="hidden" name="_csrf" value="<%= _csrf %>" />
 
 </form>

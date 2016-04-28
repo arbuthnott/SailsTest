@@ -27,6 +27,23 @@ module.exports.policies = {
   ***************************************************************************/
 
   // '*': true,
+    
+    user : {
+        // subscribe to messages only if logged in
+        'subscribe' : true,
+        
+        // allow anyone to create a new profile
+        'new' : true,
+        'create' : true,
+        
+        // allow any logged in user to mess with own stuff
+        'show' : 'profileView',
+        'edit' : 'profileView',
+        'update' : 'profileView',
+        
+        // restrict all else to admin users.
+        '*' : 'admin' // this doesn't mean 'all', it means 'all others'.
+    }
 
   /***************************************************************************
   *                                                                          *

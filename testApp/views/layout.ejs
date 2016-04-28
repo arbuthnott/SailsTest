@@ -32,6 +32,18 @@
     <link rel="stylesheet" href="/styles/bootstrap.min.css">
     <link rel="stylesheet" href="/styles/importer.css">
     <!--STYLES END-->
+      
+    <!-- add a variable for client-side use -->
+    <script type="text/javascript">
+        window.overlord = {csrf: "<%= _csrf %>"};  
+    </script>
+      
+    <!-- sounds -->
+    <audio id="notify">
+        <source src="/sounds/notify.mp3" />
+        <source src="/sounds/notify.ogg" />
+        <source src="/sounds/notify.wav" />
+    </audio>
   </head>
 
   <body>
@@ -39,8 +51,37 @@
       <!-- navbar -->
       <div class="navbar navbar-inverse navbar-fixed-top">
           <div class="container">
-              <a href="/" class="navbar-brand">activityOverlord</a>
-            
+              <div class="navbar-header">
+                  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                  </button>
+                  <a class="navbar-brand" href="/">activityOverlord</a>
+              </div>
+              <div class="navbar-collapse collapse">
+                  <ul class="nav navbar-nav">
+                      <% if (session.authenticated) { %>
+                          <li class="active"><a href="/user/show/<%= session.user.id %>"><%= session.user.name %></a></li>
+                          <% if (session.user.admin) { %>
+                              <li><a href="/user">User Admin</a></li>
+                              <li><a href="#">Placeholder</a></li>
+                          <% } %>
+                      <% } %>
+                  </ul>
+                  <div class="navbar-right">
+                      <% if (session.authenticated) { %>
+                          <a class="btn btn-default navbar-btn navbar-right" href="/session/destroy">sign-out</a>
+                      <% } else { %>
+                          <form class="navbar-right navbar-form" action="/session/create" method="POST">
+                              <input class="form-control" type="text" name="email" placeholder="your email" />
+                              <input class="form-control" type="password" name="password" placeholder="password" />
+                              <input class="btn btn-success" type="submit" value="Sign in" />
+                              <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+                          </form>
+                      <% } %>
+                  </div>
+              </div>
           </div>
       </div>
       
@@ -81,7 +122,7 @@
     -->
 
     <!--TEMPLATES-->
-    
+    <script type="text/javascript" src="/jst.js"></script>
     <!--TEMPLATES END-->
 
 
@@ -112,6 +153,8 @@
     <script src="/js/dependencies/sails.io.js"></script>
     <script src="/js/dependencies/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/custom/mySockets.js"></script>
+    <script src="/js/underscore.js"></script>
     <!--SCRIPTS END-->
   </body>
 </html>

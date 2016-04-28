@@ -31,9 +31,24 @@ module.exports = {
                 
                 return res.redirect('/user/new');
             }
-            // show the new user
-            //req.session.flash = {}; // unset any flash messages.
-            res.redirect('/user/show/' + user.id);
+            
+            //log in this user
+            req.session.authenticated = true;
+            req.session.user = user;
+            
+            // change user to online
+            user.online = true;
+            
+            // throw an event
+            sails.sockets.broadcast('userListeners', 'userCreate', user);
+            
+            // persist user
+            user.save(function (err, user) {
+                if (err) {
+                    return next(err);
+                }
+                res.redirect('/user/show/' + req.session.user.id);
+            });
         });
     },
     
@@ -73,6 +88,7 @@ module.exports = {
     update : function (req, res, next) {
         User.update(req.param('id'), req.body, function (err, updated) {
             if (err) {
+                console.log(err);
                 for (var attrib in err.invalidAttributes) {
                     req.addFlash('invalid', 'Check your ' + attrib + ' entry.');
                 }
@@ -91,6 +107,13 @@ module.exports = {
             if (!user) {
                 return next('User doesn\'t exist');
             }
+            
+            // throw an event
+            sails.sockets.broadcast('userListeners', 'userDelete', {
+                id: req.param('id'),
+                name: user.name
+            });
+            
             User.destroy(user.id, function(err) {
                 if (err) {
                     return next(err);
@@ -98,6 +121,20 @@ module.exports = {
                 res.redirect('/user');
             });
         });
+    },
+    
+    subscribe : function (req, res) {
+        // Make sure this is a socket request (not traditional HTTP)
+        if (!req.isSocket) {return res.badRequest();}
+        // Have the socket which made the request join the "funSockets" room
+        sails.sockets.join(req, 'userListeners');
+        console.log("Just joined socked " + req.socket.id + " to the userListeners room");
+        // Broadcast a "hello" message to all the fun sockets.
+        // This message will be sent to all sockets in the "funSockets" room,
+        // but will be ignored by any client sockets that are not listening-- i.e. that didn't call `io.socket.on('hello', ...)`
+        sails.sockets.broadcast('userListeners', 'hello', {id: req.socket.id});
+        // Respond to the request with an a-ok message
+        return res.ok();
     }
 	
 };
